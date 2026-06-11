@@ -79,9 +79,73 @@ def validar_menu(op):
         else:
             return op
 
+#####################################################
+###################### FUNCIONES ####################
+#####################################################
+
+# Escritura basada en diccionarios
+def escritura_archivo(archivo, diccionario):
+    #Definimos el orden como claves del diccionario
+    columnas = ["nombre", "poblacion" , "superficie", "continente"]
+    with open(archivo, "a", encoding="utf-8") as ar:
+        #Creamos el escritor indicando los nombres de columnas
+        escritor_dict = csv.DictWriter(archivo, fieldnames=columnas)
+        #Escribimos los datos
+        escritor_dict.writerow(diccionario)
+
+# Validación de texto ingresado
+def validar_texto(texto):
+    while True:
+        try:
+            pass
+        except:
+            pass
+        else:
+            return texto
+        
+# Validación de enteros
+def validar_entero(num):
+    while True:
+        try:
+            pass
+        except:
+            pass
+        else:
+            return num
+
+
+#Creamos la función de la opción 1
+def agregar_pais(datos):
+    #creamos el diccionario auxiliar
+    datos_pais = {}
+    #Le pedimos los datos al usuario
+    nombre = input("Ingrese el nombre del país que desea agregar: ").strip().title()
+    #validación
+    nombre = validar_texto(nombre)
+    poblacion = input("Ingrese la población de dicho país: ").strip()
+    #validación
+    poblacion = validar_entero(poblacion)
+    superficie = input("Ingrese la superficie del país: ").strip()
+    #Validación
+    superficie = validar_entero(superficie)
+    continente = input("Ingrese el continente al que pertenece el país: ").strip().title()
+    #Validación
+    continente = validar_texto(continente)
+    #FALTA VALIDAR REPETIDOS
+    #Agregamos los datos ya validados al diccionario
+    datos_pais["nombre"] = nombre
+    datos_pais["población"] = poblacion
+    datos_pais["superficie"] = superficie
+    datos_pais["continente"] = continente
+    #Invocamos a la función de escritura para agregar los datos al archivo
+    escritura_archivo(datos, datos_pais)
+
+
+
 ######################################################
 #######################  MAIN  #######################
 ######################################################
+import csv
 
 #Definimos las estructuras de datos a utilizar
 lista = []
