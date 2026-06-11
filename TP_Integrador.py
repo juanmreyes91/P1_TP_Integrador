@@ -97,9 +97,19 @@ def escritura_archivo(archivo, diccionario):
 def validar_texto(texto):
     while True:
         try:
-            pass
-        except:
-            pass
+            if texto == "":
+                #si se ingresó un campo vacío, notificamos el error
+                raise ValueError("No se admiten campos vacíos.")
+            elif texto.isdigit():
+                raise TypeError("Solo se admiten letras en este campo.")
+        except ValueError as e:
+            print("Error: ", e)
+            #seguimos pidiendo hasta que ingrese un campo válido
+            texto = input("Intente nuevamente: ").strip().title()
+        except TypeError as error:
+            print("Error:", error)
+            #seguimos pidiendo hasta que ingrese un campo válido
+            texto = input("Intente nuevamente: ").strip().title()
         else:
             return texto
         
@@ -107,11 +117,31 @@ def validar_texto(texto):
 def validar_entero(num):
     while True:
         try:
+            #Intentamos convertir el número a entero
+            num = int(num)
+            #Analizamos que el usuario haya ingresado un número válido
+            if num < 0:
+                raise ValueError("La cantidad ingresada debe ser positiva.")
+        except ValueError:
+            #Si el valor ingresado no es un dígito
+            print("Debe ingresar un número válido.")
+            num = input("Intente nuevamente: ").strip()
+        except Exception as e:
+            #si el número ingresado no cumple con lo requerido por el sistema
+            print("Error: ", e)
+            num = input("Intente nuevamente: ").strip()
+        else:
+            return num
+        
+#Validación de nombre repetido
+def validar_repetido(texto):
+    while True:
+        try:
             pass
         except:
             pass
         else:
-            return num
+            return texto
 
 
 #Creamos la función de la opción 1
@@ -122,6 +152,7 @@ def agregar_pais(datos):
     nombre = input("Ingrese el nombre del país que desea agregar: ").strip().title()
     #validación
     nombre = validar_texto(nombre)
+    nombre = validar_repetido(nombre)
     poblacion = input("Ingrese la población de dicho país: ").strip()
     #validación
     poblacion = validar_entero(poblacion)
