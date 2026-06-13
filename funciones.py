@@ -273,3 +273,72 @@ def ordenar_x_criterio(lector, criterio, ascendente=False):
     input("Presione Enter para continuar...")
 
 # --- Opción 6: Mostrar estadísticas ---
+
+# Sub menú de estadísticas
+def menu_estadisticas():
+    # Sub menú mostrado por pantalla
+    OP_MAX = 4 # Contiene valor máximo del sub menú
+    print("\nMostrar estadísticas de:")
+    print("1) País con mayor y menor población")
+    print("2) Promedio de población")
+    print("3) Promedio de superficie")
+    print("4) Cantidad de países por continente")
+
+    op = input("Ingrese la opción: ").strip()
+    op = validar_menu(op, OP_MAX)
+    return op
+
+# Abre archivo y direcciona el flujo según opción elegida
+def estadisticas_paises():
+    op = menu_estadisticas()
+    with open("temp.csv", "r", encoding="utf-8") as archivo:
+        lector = csv.DictReader(archivo) # Se crea el iterable
+        # Se redirecciona el flujo del programa según opción elegida
+        if op == 1:
+            mayor_menor_poblacion(lector)
+        elif op == 2:
+            promedio_poblacion(lector)
+        elif op == 3:
+            promedio_superficie(lector)
+        elif op == 4:
+            cantidad_x_continente(lector)
+
+# Opción 6.1: País con mayor y menor población
+def mayor_menor_poblacion(lector):
+    paises = sorted(lector, key= lambda clave: int(clave["poblacion"]))
+    print(f"\nEl país con menor población es {paises[0]["nombre"]}")
+    print(f"El país con mayor población es {paises[-1]["nombre"]}")
+    input("Presione Enter para continuar...")
+
+# Opción 6.2: Promedio de población
+def promedio_poblacion(lector):
+    suma = 0
+    cantidad = 0
+    for fila in lector:
+        suma += int(fila["poblacion"])
+        cantidad += 1
+    promedio = suma / cantidad
+    print(f"\nEl promedio de población es de {promedio} habitantes.")
+    input("Presione Enter para continuar...")
+
+# Opción 6.3: Promedio de superficie
+def promedio_superficie(lector):
+    suma = 0
+    cantidad = 0
+    for fila in lector:
+        suma += int(fila["superficie"])
+        cantidad += 1
+    promedio = suma / cantidad
+    print(f"\nEl promedio de superficie es de {promedio} km2.")
+    input("Presione Enter para continuar...")
+
+# Opción 6.4: Cantidad de países por continente
+def cantidad_x_continente(lector):
+    dic_aux = {} # Estructura auxiliar para contar países por continente
+    for fila in lector:
+        # Se agrega a diccionario auxiliar cantidad de países por continente
+        dic_aux[fila["continente"]] = dic_aux.get(fila["continente"], 0) + 1
+    for k, v in dic_aux.items():
+        # Se imprimen por pantalla los resultados
+        print(f"{k} tiene {v} países registrados")
+    input("Presione Enter para continuar...")
