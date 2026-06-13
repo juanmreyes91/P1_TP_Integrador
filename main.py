@@ -16,7 +16,7 @@ while opcion != 7:
     elif opcion == 2:
         f.actualizacion("temp.csv")
     elif opcion == 3:
-        pass
+        f.buscar_pais("temp.csv")
     elif opcion == 4:
         pass
     elif opcion == 5:
