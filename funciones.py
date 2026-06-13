@@ -1,4 +1,7 @@
+import csv
+
 def menu():
+    OP_MAX = 7 # Contiene valor máximo del menú
     print("#############################################")
     print("Bienvenido al gestor de información de países")
     print("#############################################")
@@ -13,17 +16,17 @@ def menu():
     #Le pedimos al usuario que ingrese una opción
     op_menu = input("Ingrese una opción: ").strip()
     #Validamos la opción ingresada
-    op_menu = validar_menu(op_menu)
+    op_menu = validar_menu(op_menu, OP_MAX)
     return op_menu
 
-def validar_menu(op):
+def validar_menu(op, op_max):
     #Creamos una función de vallidación para las opciones del menú
     while True:
         try:
             #Intentamos convertir la opción a entero
             op = int(op)
             #Analizamos si el usuario ingresó una opción válida para este menú
-            if op > 7 or op < 1:
+            if op > op_max or op < 1:
                 raise Exception("La opción ingresada no es válida.")
         #Si hubo errores, notificar y volver a pedir una opción válida
         except ValueError:
@@ -75,3 +78,136 @@ def validar_entero(num):
             num = input("Intente nuevamente: ").strip()
         else:
             return num
+
+def menu_filtrar_paises():
+    # Sub menú mostrado por pantalla
+    OP_MAX = 3 # Contiene valor máximo del sub menú
+    print("Filtrar países por:")
+    print("1) Continente")
+    print("2) Rango de población")
+    print("3) Rango de superficie")
+
+    op = input("Ingrese la opción: ").strip()
+    op = validar_menu(op, OP_MAX)
+    return op
+
+# --- Opción 4: Función pricipal ---
+def filtrar_paises():
+    op = menu_filtrar_paises()
+    with open("temp.csv", "r", encoding="utf-8") as archivo:
+        lector = csv.DictReader(archivo)
+        if op == 1:
+            filtrar_continente(lector)
+        elif op == 2:
+            filtrar_población(lector)
+        elif op == 3:
+            filtrar_superficie(lector)    
+
+# --- Opción 4.1: Filtrar por continente
+
+def menu_continentes():
+    OP_MAX = 5 # Valor máximo para este submenú
+    print("\nContinentes:")
+    print("1) América")
+    print("2) África")
+    print("3) Asia")
+    print("4) Europa")
+    print("5) Oceanía")
+    
+    op = input("¿Qué continente quiere consultar? ").strip()
+    op = validar_menu(op, OP_MAX)
+    return op
+
+def filtrar_continente(lector):
+    op = menu_continentes()
+    # op usado como índice para lista 'continentes'
+    continentes = ["América", "África", "Asia", "Europa", "Oceanía"]
+    continente = continentes[op-1]
+    aux_paises = []
+    # Lista vacía que guardará países que coincidan con la búsqueda 
+    for fila in lector:
+        if fila["continente"] == continente:
+            aux_paises.append(fila["nombre"])
+    # Finalmente se muestran los resultados por pantalla
+    if len(aux_paises) > 0:
+        print(f"Los países de {continente} son:")
+        for pais in aux_paises:
+            print(f"- {pais}")
+    else:
+        print(f"No hay países registrados para {continente}")
+    input("Presione Enter para continuar...")
+
+# --- Opción 4.2: filtrar por población ---
+
+def menu_rangos_poblacion():
+    OP_MAX = 6 # Valor máximo para este submenú
+    print("\nRangos de población:")
+    print("1) Menos de 1 millón")
+    print("2) De 1M a 10M")
+    print("3) De 10M a 50M")
+    print("4) De 50M a 200M")
+    print("5) De 200M a 1.000M")
+    print("6) Mayores a 1.000M")
+
+    op = input("¿Qué rango quiere consultar? ").strip()
+    op = validar_menu(op, OP_MAX)
+    return op
+
+def filtrar_población(lector):
+    op = menu_rangos_poblacion()
+    rangos = [{"minimo": 0, "maximo": 1000000}, # Menor a 1M
+              {"minimo": 1000000, "maximo": 10000000}, # Entre 1M y 10M
+              {"minimo": 10000000, "maximo": 50000000}, # Entre 10M y 50M
+              {"minimo": 50000000, "maximo": 200000000}, # Entre 50M y 200M
+              {"minimo": 200000000, "maximo": 1000000000}, # Entre 200M y 1.000M
+              {"minimo": 1000000000, "maximo": float('inf')}] # Más de 1.000M
+    aux_paises = []
+    rango = rangos[op-1]
+    for fila in lector: # Ahora fila es un diccionario
+        if rango["minimo"] <= int(fila["poblacion"]) < rango["maximo"]:
+            aux_paises.append(fila["nombre"])
+    if len(aux_paises) > 0:
+        print(f"\nPaíses dentro del rango de población seleccionada: ")
+        for pais in aux_paises:
+            print(f"- {pais}")
+    else:
+        print("\nNo hay países registrados con ese rango de población")
+    input("Presione Enter para continuar...")
+
+# --- Opcion 4.3: Filtrar por superficie ---
+
+# Muestra opciones de rangos de superficies en km2
+# Y solocita elegir una opción
+def menu_rangos_superficie():
+    OP_MAX = 5 # Valor máximo para este submenú
+    print("\nRangos de superficie:")
+    print("1) Menos de 1000km2")
+    print("2) De 1000 a 100000 km2")
+    print("3) De 100000 a 1000000 km2")
+    print("4) De 1M a 5M km2")
+    print("5) Mayor a 5M km2")
+
+    op = input("¿Qué rango quiere consultar? ").strip()
+    op = validar_menu(op, OP_MAX)
+    return op
+
+# Imprime por pantalla países dentro del rango de superficie elegida
+def filtrar_superficie(lector):
+    op = menu_rangos_superficie()
+    rangos = [{"minimo": 0, "maximo": 1000}, # Menor a 1.000km2
+              {"minimo": 1000, "maximo": 100000}, # Entre 1.000 y 100.000km2
+              {"minimo": 100000, "maximo": 1000000}, # Entre 100.000 y 1Mkm2
+              {"minimo": 1000000, "maximo": 5000000}, # Entre 1M y 5M km2
+              {"minimo": 5000000, "maximo": float('inf')}] # Más de 5M km2
+    aux_paises = []
+    rango = rangos[op-1]
+    for fila in lector: # Ahora fila es un diccionario
+        if rango["minimo"] <= int(fila["superficie"]) < rango["maximo"]:
+            aux_paises.append(fila["nombre"])
+    if len(aux_paises) > 0:
+        print(f"\nPaíses dentro del rango de superficie seleccionada: ")
+        for pais in aux_paises:
+            print(f"- {pais}")
+    else:
+        print("\nNo hay países registrados con ese rango de superficie")
+    input("Presione Enter para continuar...")
