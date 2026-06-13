@@ -12,7 +12,7 @@ opcion = 0
 while opcion != 7:
     opcion = f.menu()
     if opcion == 1:
-        pass
+        f.agregar_pais("temp.csv")
     elif opcion == 2:
         pass
     elif opcion == 3:
