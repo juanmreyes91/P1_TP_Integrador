@@ -47,7 +47,7 @@ def menu():
     print("#############################################")
     print("Elija una opción del menú:")
     print("1) Agregar un país")
-    print("2) Actualizar los datos de Población y Superficie")
+    print("2) Actualizar los datos (submenú)")
     print("3) Buscar un país por nombre")
     print("4) Filtrar países (submenú)")
     print("5) Ordenar países (submenú)")
@@ -79,23 +79,33 @@ def validar_menu(op):
         else:
             return op
 
+def validar_submenu(op_sub):
+    #Creamos una función de vallidación para las opciones del submenú
+    while True:
+        try:
+            #Intentamos convertir la opción a entero
+            op_sub = int(op_sub)
+            #Analizamos si el usuario ingresó una opción válida para este menú
+            if op_sub > 2 or op_sub < 1:
+                raise Exception("La opción ingresada no es válida.")
+        #Si hubo errores, notificar y volver a pedir una opción válida
+        except ValueError:
+            #Si el valor ingresado no es un dígito
+            print("Debe ingresar un número válido.")
+            op_sub = input("Ingrese una opción del menú: ").strip()
+        except Exception as e:
+            print("Error: ", e)
+            op_sub = input("Ingrese una opción del submenú: ").strip()
+        else:
+            return op_sub
+
 #####################################################
-###################### FUNCIONES ####################
+################### VALIDACIONES ####################
 #####################################################
 import csv
 
-# Escritura basada en diccionarios
-def escritura_archivo(archivo, diccionario):
-    #Definimos el orden como claves del diccionario
-    columnas = ["nombre", "poblacion" , "superficie", "continente"]
-    with open(archivo, "a", encoding="utf-8") as ar:
-        #Creamos el escritor indicando los nombres de columnas
-        escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
-        #Escribimos los datos
-        escritor_dict.writerow(diccionario)
-
+# Validación de nombre repetido
 # Lectura basada en diccionarios
-#def lectura_archivo(archivo):
 def validar_repetido(archivo, texto):
     try:
         with open(archivo, "r", encoding="utf-8") as ar:
@@ -106,8 +116,22 @@ def validar_repetido(archivo, texto):
                     raise ValueError("El país ingresado ya está registrado!")
     except ValueError as e:
         print("Error:", e)
+        print()
         return None
     return texto
+
+def validar_existencia(archivo, texto):
+    try:
+        with open(archivo, "r", encoding="utf-8") as ar:
+            lector_dict = csv.DictReader(ar)
+            for diccionario in lector_dict:
+                if texto == diccionario['nombre']:
+                    return texto
+            raise ValueError(f"El país {texto} no está en la lista.")
+    except ValueError as e:
+        print("Error:", e)
+        print()
+        return None
 
 
 # Validación de texto ingresado
@@ -150,6 +174,48 @@ def validar_entero(num):
         else:
             return num
 
+#############################################
+############ FUNCIONES AUXILIARES ###########
+#############################################
+
+# Escritura basada en diccionarios
+def escritura_archivo(archivo, diccionario):
+    #Definimos el orden como claves del diccionario
+    columnas = ["nombre", "poblacion" , "superficie", "continente"]
+    with open(archivo, "a", encoding="utf-8",  newline="") as ar:
+        #Creamos el escritor indicando los nombres de columnas
+        escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
+        #Escribimos los datos
+        escritor_dict.writerow(diccionario)
+
+def actualizacion_archivo(archivo, texto, numero, submenu):
+    #Definimos el orden como claves del diccionario
+    columnas = ["nombre", "poblacion" , "superficie", "continente"]
+    #Definimos una lista auxiliar de diccionarios
+    lista =[]
+    with open(archivo, "r", encoding="utf-8",  newline="") as ar:
+        lector_dict = csv.DictReader(ar)
+        for diccionario in lector_dict:
+            if texto == diccionario['nombre']:
+                if submenu == 1:
+                    diccionario["poblacion"] = numero
+                elif submenu == 2:
+                    diccionario["superficie"] = numero
+            #Agregamos todos los diccionarios como estaban + el corregido
+            lista.append(diccionario)
+    #Definimos el orden como claves del diccionario
+    columnas = ["nombre", "poblacion" , "superficie", "continente"]
+    with open(archivo, "w", encoding="utf-8",  newline="") as ar:
+        #Creamos el escritor indicando los nombres de columnas
+        escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
+        #Escribimos el encabezado
+        escritor_dict.writeheader()
+        #Actualizamos el archivo
+        escritor_dict.writerows(lista)
+
+#############################################
+################# OPCIÓN 1 ##################
+#############################################
 
 #Creamos la función de la opción 1
 def agregar_pais(datos):
@@ -160,6 +226,8 @@ def agregar_pais(datos):
     #validación
     nombre = validar_texto(nombre)
     nombre = validar_repetido(datos, nombre)
+    # Si la validación de repetidos fue exitosa, continuamos con la carga de datos.
+    # Sino, se vuelve al menú principal.
     if nombre:
         poblacion = input(f"Ingrese la población de {nombre}: ").strip()
         #validación
@@ -179,3 +247,43 @@ def agregar_pais(datos):
         escritura_archivo(datos, datos_pais)
         print(f"El país {nombre} se registró correectamente.")
         print()
+
+#############################################
+################# OPCIÓN 2 ##################
+#############################################
+
+# Creamos la función de la opción 2
+def actualizacion(datos):
+    #Desplegamos el submenú
+    print("¿Qué datos desea actualizar?")
+    print("1) Población")
+    print("2) Superficie")
+    #Le pedimos al usuario que ingrese una opción de submenú
+    opcion_submenu = input("Ingrese 1 o 2: ").strip()
+    #validación
+    opcion_submenu = validar_submenu(opcion_submenu)
+    #Le pedimos al usuario el nombre del país
+    pais = input("¿Qué país desea actualizar? ").strip().title()
+    #validación
+    pais = validar_texto(pais)
+    pais = validar_existencia(datos, pais)
+    #si el país está en el archivo
+    if pais:
+        if opcion_submenu == 1:
+            #se pide el dato de la población
+            poblacion = input("Ingrese el valor actualizado de la población: ").strip()
+            #validación
+            poblacion = validar_entero(poblacion)
+            #se invoca a la función que actualiza el archivo
+            actualizacion_archivo(datos, pais, poblacion, opcion_submenu)
+            print(f"Los datos de población de {pais} fueron actualizados correctamente.")
+            print()
+        elif opcion_submenu == 2:
+            #se pide el dato de la superficie
+            superficie = input("Ingrese el valor actualizado de la superficie: ").strip()
+            #validación
+            superficie = validar_entero(superficie)
+            #se invoca a la función que actualiza el archivo
+            actualizacion_archivo(datos, pais, superficie, opcion_submenu)
+            print(f"Los datos de superficie de {pais} fueron actualizados correctamente.")
+            print()
