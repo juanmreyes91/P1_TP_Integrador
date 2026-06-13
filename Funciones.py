@@ -213,6 +213,39 @@ def actualizacion_archivo(archivo, texto, numero, submenu):
         #Actualizamos el archivo
         escritor_dict.writerows(lista)
 
+def busqueda_parcial_total(archivo, texto):
+    try:
+        with open(archivo, "r", encoding="utf-8") as ar:
+            #iniciamos un contador auxiliar
+            i = 0
+            #iniciamos una lista auxiliar
+            aux_list = []
+            lector_dict = csv.DictReader(ar)
+            for diccionario in lector_dict:
+                if texto == diccionario['nombre'] or texto in diccionario['nombre']:
+                    aux_list.append(diccionario)
+                    i += 1
+            if i == 0:
+                raise ValueError(f"El país {texto} no está en la lista.")
+            else:
+                print()
+                print(f"Las coincidencias con {texto} encontradas son:")
+                print("Nombre", end=" | ")
+                print("Población", end=" | ")
+                print("Superficie [km**2]", end=" | ")
+                print("Continente")
+                print("------------------------------------------------------")
+                for diccionario in aux_list:
+                    print(diccionario["nombre"], end=" | ")
+                    print(diccionario["poblacion"], end=" | ")
+                    print(diccionario["superficie"], end=" | ")
+                    print(diccionario["continente"])
+                print()
+    except ValueError as e:
+        print(e)
+        print()
+        return None
+
 #############################################
 ################# OPCIÓN 1 ##################
 #############################################
@@ -287,3 +320,16 @@ def actualizacion(datos):
             actualizacion_archivo(datos, pais, superficie, opcion_submenu)
             print(f"Los datos de superficie de {pais} fueron actualizados correctamente.")
             print()
+
+#############################################
+################# OPCIÓN 3 ##################
+#############################################
+
+#Creamos la función de la opción 3
+def buscar_pais(datos):
+    #Le pedimos al usuario el dato a buscar
+    pais = input("¿Qué país desea buscar? ").strip().title()
+    #validamos el dato
+    pais = validar_texto(pais)
+    #Buscamos el país
+    pais = busqueda_parcial_total(datos, pais)
