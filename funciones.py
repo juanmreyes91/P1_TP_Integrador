@@ -79,6 +79,7 @@ def validar_entero(num):
         else:
             return num
 
+# --- OPCIÓN 4: Filtrar países. FUNCIÓN PRINCIPAL ---
 def menu_filtrar_paises():
     # Sub menú mostrado por pantalla
     OP_MAX = 3 # Contiene valor máximo del sub menú
@@ -91,7 +92,6 @@ def menu_filtrar_paises():
     op = validar_menu(op, OP_MAX)
     return op
 
-# --- Opción 4: Función pricipal ---
 def filtrar_paises():
     op = menu_filtrar_paises()
     with open("temp.csv", "r", encoding="utf-8") as archivo:
@@ -211,3 +211,65 @@ def filtrar_superficie(lector):
     else:
         print("\nNo hay países registrados con ese rango de superficie")
     input("Presione Enter para continuar...")
+
+
+# --- Opción 5: Ordenar países ---
+
+def menu_ordenar_paises():
+    # Sub menú mostrado por pantalla
+    OP_MAX = 3 # Contiene valor máximo del sub menú
+    print("Ordenar países por:")
+    print("1) Nombre")
+    print("2) Población")
+    print("3) Superficie (ascendente o descendente)")
+
+    op = input("Ingrese la opción: ").strip()
+    op = validar_menu(op, OP_MAX)
+    return op
+
+# Sub-menú para elegir orden de superficie ascendente o descendente
+def solicitar_orden():
+    OP_MAX = 2
+    print("1) Orden ascendente")
+    print("2) Orden descendente")
+    o = input("Ingrese opción: ").strip()
+    o = validar_menu(o, OP_MAX)
+    if o == 1:
+        return False # Para orden ascendente
+    else:
+        return True # Para orden descendente
+
+# Función principal, llama al menú, abre archivo y redirige el flujo
+def ordenar_paises():
+    op = menu_ordenar_paises()
+    with open("temp.csv", "r", encoding="utf-8") as archivo:
+        lector = csv.DictReader(archivo)
+        if op == 1:
+            ordenar_x_criterio(lector, "nombre")
+        elif op == 2:
+            ordenar_x_criterio(lector, "poblacion")
+        elif op == 3:
+            orden = solicitar_orden()
+            ordenar_x_criterio(lector, "superficie", orden)
+
+
+# Imprime por pantalla los resultados según el criterio 
+
+def ordenar_x_criterio(lector, criterio, ascendente=False):
+    # Se determina el criterio de ordenamiento
+    if criterio == "nombre":
+        clave = lambda fila: fila["nombre"]
+    elif criterio == "poblacion":
+        clave = lambda fila: int(fila["poblacion"])
+    elif criterio == "superficie":
+        clave = lambda fila: int(fila["superficie"])
+    # Se crea la lista ordenada
+    paises = sorted(lector, key=clave, reverse=ascendente)
+    # Se imprimen los resultados por pantalla
+    print(f"\nPaíses ordenados por {criterio}: ")
+    print("Nombre   | Población   | Superficie   | Continenete")
+    for p in paises:
+        print(f"{p["nombre"]} | {p["poblacion"]} | {p["superficie"]}km2 | {p["continente"]}")
+    input("Presione Enter para continuar...")
+
+# --- Opción 6: Mostrar estadísticas ---
