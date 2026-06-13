@@ -141,7 +141,7 @@ def validar_texto(texto):
             if texto == "":
                 #si se ingresó un campo vacío, notificamos el error
                 raise ValueError("No se admiten campos vacíos.")
-            elif texto.isdigit():
+            elif not texto.isalpha():
                 raise TypeError("Solo se admiten letras en este campo.")
         except ValueError as e:
             print("Error: ", e)
@@ -203,8 +203,6 @@ def actualizacion_archivo(archivo, texto, numero, submenu):
                     diccionario["superficie"] = numero
             #Agregamos todos los diccionarios como estaban + el corregido
             lista.append(diccionario)
-    #Definimos el orden como claves del diccionario
-    columnas = ["nombre", "poblacion" , "superficie", "continente"]
     with open(archivo, "w", encoding="utf-8",  newline="") as ar:
         #Creamos el escritor indicando los nombres de columnas
         escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
