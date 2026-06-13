@@ -14,7 +14,7 @@ while opcion != 7:
     if opcion == 1:
         f.agregar_pais("temp.csv")
     elif opcion == 2:
-        pass
+        f.actualizacion("temp.csv")
     elif opcion == 3:
         pass
     elif opcion == 4:
