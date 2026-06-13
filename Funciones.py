@@ -82,6 +82,7 @@ def validar_menu(op):
 #####################################################
 ###################### FUNCIONES ####################
 #####################################################
+import csv
 
 # Escritura basada en diccionarios
 def escritura_archivo(archivo, diccionario):
@@ -89,9 +90,25 @@ def escritura_archivo(archivo, diccionario):
     columnas = ["nombre", "poblacion" , "superficie", "continente"]
     with open(archivo, "a", encoding="utf-8") as ar:
         #Creamos el escritor indicando los nombres de columnas
-        escritor_dict = csv.DictWriter(archivo, fieldnames=columnas)
+        escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
         #Escribimos los datos
         escritor_dict.writerow(diccionario)
+
+# Lectura basada en diccionarios
+#def lectura_archivo(archivo):
+def validar_repetido(archivo, texto):
+    try:
+        with open(archivo, "r", encoding="utf-8") as ar:
+            lector_dict = csv.DictReader(ar)
+            for diccionario in lector_dict:
+                if texto == diccionario['nombre']:
+                    #si se ingresó un campo ya existente, notificamos el error
+                    raise ValueError("El país ingresado ya está registrado!")
+    except ValueError as e:
+        print("Error:", e)
+        return None
+    return texto
+
 
 # Validación de texto ingresado
 def validar_texto(texto):
@@ -132,16 +149,6 @@ def validar_entero(num):
             num = input("Intente nuevamente: ").strip()
         else:
             return num
-        
-#Validación de nombre repetido
-def validar_repetido(texto):
-    while True:
-        try:
-            pass
-        except:
-            pass
-        else:
-            return texto
 
 
 #Creamos la función de la opción 1
@@ -152,21 +159,23 @@ def agregar_pais(datos):
     nombre = input("Ingrese el nombre del país que desea agregar: ").strip().title()
     #validación
     nombre = validar_texto(nombre)
-    nombre = validar_repetido(nombre)
-    poblacion = input("Ingrese la población de dicho país: ").strip()
-    #validación
-    poblacion = validar_entero(poblacion)
-    superficie = input("Ingrese la superficie del país: ").strip()
-    #Validación
-    superficie = validar_entero(superficie)
-    continente = input("Ingrese el continente al que pertenece el país: ").strip().title()
-    #Validación
-    continente = validar_texto(continente)
-    #FALTA VALIDAR REPETIDOS
-    #Agregamos los datos ya validados al diccionario
-    datos_pais["nombre"] = nombre
-    datos_pais["población"] = poblacion
-    datos_pais["superficie"] = superficie
-    datos_pais["continente"] = continente
-    #Invocamos a la función de escritura para agregar los datos al archivo
-    escritura_archivo(datos, datos_pais)
+    nombre = validar_repetido(datos, nombre)
+    if nombre:
+        poblacion = input(f"Ingrese la población de {nombre}: ").strip()
+        #validación
+        poblacion = validar_entero(poblacion)
+        superficie = input(f"Ingrese la superficie de {nombre} [km**2]: ").strip()
+        #Validación
+        superficie = validar_entero(superficie)
+        continente = input(f"Ingrese el continente al que pertenece {nombre}: ").strip().title()
+        #Validación
+        continente = validar_texto(continente)
+        #Agregamos los datos ya validados al diccionario
+        datos_pais["nombre"] = nombre
+        datos_pais["poblacion"] = poblacion
+        datos_pais["superficie"] = superficie
+        datos_pais["continente"] = continente
+        #Invocamos a la función de escritura para agregar los datos al archivo
+        escritura_archivo(datos, datos_pais)
+        print(f"El país {nombre} se registró correectamente.")
+        print()
