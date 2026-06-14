@@ -590,5 +590,3 @@ while opcion != 7:
         ordenar_paises("datos_paises.csv")
     elif opcion == 6:
         estadisticas_paises("datos_paises.csv")
-        
-     
