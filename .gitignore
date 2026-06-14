@@ -1,0 +1,6 @@
+temp.csv
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
