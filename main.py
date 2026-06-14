@@ -74,6 +74,9 @@ def validar_repetido(archivo, texto):
                 if texto == diccionario['nombre']:
                     #si se ingresó un campo ya existente, notificamos el error
                     raise ValueError("El país ingresado ya está registrado!")
+    except FileNotFoundError:
+        print(f"Error: el archivo '{archivo}' no existe.")
+        return None
     except ValueError as e:
         print("Error:", e)
         print()
@@ -88,6 +91,9 @@ def validar_existencia(archivo, texto):
                 if texto == diccionario['nombre']:
                     return texto
             raise ValueError(f"El país {texto} no está en la lista.")
+    except FileNotFoundError:
+        print(f"Error: el archivo '{archivo}' no existe.")
+        return None
     except ValueError as e:
         print("Error:", e)
         print()
@@ -140,36 +146,44 @@ def validar_entero(num):
 
 # Escritura basada en diccionarios
 def escritura_archivo(archivo, diccionario):
-    #Definimos el orden como claves del diccionario
-    columnas = ["nombre", "poblacion" , "superficie", "continente"]
-    with open(archivo, "a", encoding="utf-8",  newline="") as ar:
-        #Creamos el escritor indicando los nombres de columnas
-        escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
-        #Escribimos los datos
-        escritor_dict.writerow(diccionario)
+    try:
+        #Definimos el orden como claves del diccionario
+        columnas = ["nombre", "poblacion" , "superficie", "continente"]
+        with open(archivo, "a", encoding="utf-8",  newline="") as ar:
+            #Creamos el escritor indicando los nombres de columnas
+            escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
+            #Escribimos los datos
+            escritor_dict.writerow(diccionario)
+    except FileNotFoundError:
+        print(f"Error: el archivo '{archivo}' no existe.")
+        return None
 
 def actualizacion_archivo(archivo, texto, numero, submenu):
-    #Definimos el orden como claves del diccionario
-    columnas = ["nombre", "poblacion" , "superficie", "continente"]
-    #Definimos una lista auxiliar de diccionarios
-    lista =[]
-    with open(archivo, "r", encoding="utf-8",  newline="") as ar:
-        lector_dict = csv.DictReader(ar)
-        for diccionario in lector_dict:
-            if texto == diccionario['nombre']:
-                if submenu == 1:
-                    diccionario["poblacion"] = numero
-                elif submenu == 2:
-                    diccionario["superficie"] = numero
-            #Agregamos todos los diccionarios como estaban + el corregido
-            lista.append(diccionario)
-    with open(archivo, "w", encoding="utf-8",  newline="") as ar:
-        #Creamos el escritor indicando los nombres de columnas
-        escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
-        #Escribimos el encabezado
-        escritor_dict.writeheader()
-        #Actualizamos el archivo
-        escritor_dict.writerows(lista)
+    try:
+        #Definimos el orden como claves del diccionario
+        columnas = ["nombre", "poblacion" , "superficie", "continente"]
+        #Definimos una lista auxiliar de diccionarios
+        lista =[]
+        with open(archivo, "r", encoding="utf-8",  newline="") as ar:
+            lector_dict = csv.DictReader(ar)
+            for diccionario in lector_dict:
+                if texto == diccionario['nombre']:
+                    if submenu == 1:
+                        diccionario["poblacion"] = numero
+                    elif submenu == 2:
+                        diccionario["superficie"] = numero
+                #Agregamos todos los diccionarios como estaban + el corregido
+                lista.append(diccionario)
+        with open(archivo, "w", encoding="utf-8",  newline="") as ar:
+            #Creamos el escritor indicando los nombres de columnas
+            escritor_dict = csv.DictWriter(ar, fieldnames=columnas)
+            #Escribimos el encabezado
+            escritor_dict.writeheader()
+            #Actualizamos el archivo
+            escritor_dict.writerows(lista)
+    except FileNotFoundError:
+        print(f"Error: el archivo '{archivo}' no existe.")
+        return None
 
 def busqueda_parcial_total(archivo, texto):
     try:
@@ -199,6 +213,9 @@ def busqueda_parcial_total(archivo, texto):
                     print(diccionario["superficie"], end=" | ")
                     print(diccionario["continente"])
                 print()
+    except FileNotFoundError:
+        print(f"Error: el archivo '{archivo}' no existe.")
+        return None
     except ValueError as e:
         print(e)
         print()
