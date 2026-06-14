@@ -94,14 +94,18 @@ def menu_filtrar_paises():
 
 def filtrar_paises():
     op = menu_filtrar_paises()
-    with open("temp.csv", "r", encoding="utf-8") as archivo:
-        lector = csv.DictReader(archivo)
-        if op == 1:
-            filtrar_continente(lector)
-        elif op == 2:
-            filtrar_población(lector)
-        elif op == 3:
-            filtrar_superficie(lector)    
+    try:
+        with open("temp.csv", "r", encoding="utf-8") as archivo:
+            lector = csv.DictReader(archivo)
+            if op == 1:
+                filtrar_continente(lector)
+            elif op == 2:
+                filtrar_población(lector)
+            elif op == 3:
+                filtrar_superficie(lector)
+    except FileNotFoundError:
+        print(f"Error: El archivo solicitado no existe")
+        return None
 
 # --- Opción 4.1: Filtrar por continente
 
@@ -244,16 +248,19 @@ def solicitar_orden():
 # Función principal, llama al menú, abre archivo y redirige el flujo
 def ordenar_paises():
     op = menu_ordenar_paises()
-    with open("temp.csv", "r", encoding="utf-8") as archivo:
-        lector = csv.DictReader(archivo)
-        if op == 1:
-            ordenar_x_criterio(lector, "nombre")
-        elif op == 2:
-            ordenar_x_criterio(lector, "poblacion")
-        elif op == 3:
-            orden = solicitar_orden()
-            ordenar_x_criterio(lector, "superficie", orden)
-
+    try:
+        with open("temp.csv", "r", encoding="utf-8") as archivo:
+            lector = csv.DictReader(archivo)
+            if op == 1:
+                ordenar_x_criterio(lector, "nombre")
+            elif op == 2:
+                ordenar_x_criterio(lector, "poblacion")
+            elif op == 3:
+                orden = solicitar_orden()
+                ordenar_x_criterio(lector, "superficie", orden)
+    except FileNotFoundError:
+        print(f"Error: El archivo solicitado no existe")
+        return None
 
 # Imprime por pantalla los resultados según el criterio 
 
@@ -293,17 +300,21 @@ def menu_estadisticas():
 # Abre archivo y direcciona el flujo según opción elegida
 def estadisticas_paises():
     op = menu_estadisticas()
-    with open("temp.csv", "r", encoding="utf-8") as archivo:
-        lector = csv.DictReader(archivo) # Se crea el iterable
-        # Se redirecciona el flujo del programa según opción elegida
-        if op == 1:
-            mayor_menor_poblacion(lector)
-        elif op == 2:
-            promedio_poblacion(lector)
-        elif op == 3:
-            promedio_superficie(lector)
-        elif op == 4:
-            cantidad_x_continente(lector)
+    try:
+        with open("temp.csv", "r", encoding="utf-8") as archivo:
+            lector = csv.DictReader(archivo) # Se crea el iterable
+            # Se redirecciona el flujo del programa según opción elegida
+            if op == 1:
+                mayor_menor_poblacion(lector)
+            elif op == 2:
+                promedio_poblacion(lector)
+            elif op == 3:
+                promedio_superficie(lector)
+            elif op == 4:
+                cantidad_x_continente(lector)
+    except FileNotFoundError:
+        print(f"Error: El archivo solicitado no existe")
+        return None
 
 # Opción 6.1: País con mayor y menor población
 def mayor_menor_poblacion(lector):
