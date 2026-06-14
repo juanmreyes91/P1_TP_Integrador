@@ -15,8 +15,8 @@ El objetivo principal es aplicar estructuras de datos como listas y diccionarios
 
 ### Instrucciones de uso
 * Descargar o clonar el repositorio: git clone https://github.com/juanmreyes91/P1_TP_Integrador.git
-* Verificar que el archivo CSV se encuentre en la misma carpeta que el código TP_Integrador.py
-* Ejecutar el programa:  python TP_Integrador.py
+* Verificar que el archivo CSV se encuentre en la misma carpeta que el código main.py
+* Ejecutar el programa:  python main.py
 * Seleccionar la opción deseada del menú principal
 * Seguir las instrucciones mostradas en pantalla
 
@@ -77,7 +77,7 @@ Ingrese una opción:
 ```text
 P1_TP_Integrador/
 ├── Documentacion_Academica_Tecnica.pdf
-├── TP_Integrador.py
+├── main.py
 ├── datos_paises.csv
 └── README.md
 ```
