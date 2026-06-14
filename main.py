@@ -253,7 +253,7 @@ def agregar_pais(datos):
         datos_pais["continente"] = continente
         #Invocamos a la función de escritura para agregar los datos al archivo
         escritura_archivo(datos, datos_pais)
-        print(f"El país {nombre} se registró correectamente.")
+        print(f"El país {nombre} se registró correctamente.")
         print()
 
 #############################################
