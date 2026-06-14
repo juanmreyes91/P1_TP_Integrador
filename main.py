@@ -1,4 +1,6 @@
-
+#####################################################
+####################### MENÚ ########################
+#####################################################
 
 def menu():
     OP_MAX = 7 # Contiene valor máximo del menú
@@ -19,14 +21,14 @@ def menu():
     op_menu = validar_menu(op_menu, OP_MAX)
     return op_menu
 
-def validar_menu(op, op_max):
+def validar_menu(op, max):
     #Creamos una función de vallidación para las opciones del menú
     while True:
         try:
             #Intentamos convertir la opción a entero
             op = int(op)
             #Analizamos si el usuario ingresó una opción válida para este menú
-            if op > op_max or op < 1:
+            if op > max or op < 1:
                 raise Exception("La opción ingresada no es válida.")
         #Si hubo errores, notificar y volver a pedir una opción válida
         except ValueError:
@@ -520,6 +522,7 @@ def agregar_pais(datos):
 
 # Creamos la función de la opción 2
 def actualizacion(datos):
+    OP_MAX = 2
     #Desplegamos el submenú
     print("¿Qué datos desea actualizar?")
     print("1) Población")
@@ -527,7 +530,7 @@ def actualizacion(datos):
     #Le pedimos al usuario que ingrese una opción de submenú
     opcion_submenu = input("Ingrese 1 o 2: ").strip()
     #validación
-    opcion_submenu = validar_submenu(opcion_submenu)
+    opcion_submenu = validar_menu(opcion_submenu, OP_MAX)
     #Le pedimos al usuario el nombre del país
     pais = input("¿Qué país desea actualizar? ").strip().title()
     #validación
@@ -587,5 +590,3 @@ while opcion != 7:
         ordenar_paises()
     elif opcion == 6:
         estadisticas_paises()
-        
-     
