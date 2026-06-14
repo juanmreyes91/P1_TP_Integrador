@@ -86,7 +86,7 @@ P1_TP_Integrador/
 
 * Juan Manuel Reyes Lima: Creación del repositorio en GitHub, creación del archivo datos_paises.csv, responsable de las funciones 4, 5 y 6 del programa.
 * Carolina Rodríguez: Creación de la rama main y de la subrama de trabajo en GitHub, creación del archivo .gitignore para evitar cargas de datos no deseados al repositorio, responsable de la función menú, 1, 2 y 3 del programa.
-* Responsabilidad compartida: Verificación del funcionamiento del programa y de las respectivas validaciones, pull request y discusiones previas al merge final, redacción de informe técnico y README.md
+* Responsabilidad compartida: Verificación del funcionamiento del programa y de las respectivas validaciones, pull request y discusiones previas al merge final, redacción de informe técnico, README.md y realización del video explicativo y demostrativo.
 
 ### Link del video explicatvo y demostrativo
 
